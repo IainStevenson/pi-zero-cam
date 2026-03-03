@@ -1,54 +1,107 @@
 #!/bin/bash
 set -e
 
-# Load camera variables
-source ./pi-zero-cam-vars.sh
+echo "Creating camera stream service..."
 
-echo "=== Creating systemd service files with camera variables ==="
-
-# -----------------------------
-# Local fullscreen camera viewer
-# -----------------------------
-cat << EOF | sudo tee /etc/systemd/system/camera-kiosk.service
+sudo tee /etc/systemd/system/pi-zero-cam-stream.service > /dev/null <<EOF
 [Unit]
-Description=Pi Camera Fullscreen Viewer
-After=graphical.target
-
-[Service]
-User=$DISPLAY_USER
-Environment=DISPLAY=:0
-ExecStart=/usr/bin/nohup /usr/bin/rpicam-vid -t 0 --fullscreen \
-           --brightness $CAM_BRIGHTNESS --contrast $CAM_CONTRAST --exposure $CAM_EXPOSURE > /home/$DISPLAY_USER/camera.log 2>&1
-Restart=always
-WorkingDirectory=/home/$DISPLAY_USER
-
-[Install]
-WantedBy=graphical.target
-EOF
-
-# -----------------------------
-# UV4L streaming service
-# -----------------------------
-cat << EOF | sudo tee /etc/systemd/system/uv4l.service
-[Unit]
-Description=UV4L Camera Streaming Service
+Description=Pi Zero Camera Stream
 After=network.target
 
 [Service]
-ExecStart=/usr/bin/uv4l --driver raspicam --auto-video_nr \
-           --server-option=--port=$UV4L_PORT \
-           --server-option=--enable-server \
-           --server-option=--editable-config-file=/etc/uv4l/uv4l-raspicam.conf \
-           --brightness=$CAM_BRIGHTNESS --contrast=$CAM_CONTRAST --exposure=$CAM_EXPOSURE
+Type=simple
+ExecStart=/bin/bash -c '
+source /usr/local/bin/pi-zero-cam-vars.sh;
+libcamera-vid \
+    --width \$WIDTH \
+    --height \$HEIGHT \
+    --framerate \$FPS \
+    --bitrate \$BITRATE \
+    --brightness \$BRIGHTNESS \
+    --contrast \$CONTRAST \
+    --exposure \$EXPOSURE \
+    -t 0 \
+    --inline \
+    -o rtsp://127.0.0.1:8554/cam'
 Restart=always
-User=root
-WorkingDirectory=/home/$DISPLAY_USER
+RestartSec=2
 
 [Install]
 WantedBy=multi-user.target
 EOF
 
-# Reload systemd to register new services
+echo "Creating conditional display service..."
+
+sudo tee /etc/systemd/system/pi-zero-cam-display.service > /dev/null <<EOF
+[Unit]
+Description=Pi Zero Conditional Fullscreen Viewer
+After=graphical.target pi-zero-cam-stream.service
+Requires=pi-zero-cam-stream.service
+
+[Service]
+User=pi
+Environment=DISPLAY=:0
+ExecStart=/bin/bash -c '
+if xrandr | grep " connected" > /dev/null; then
+    unclutter -idle 0.1 &
+    feh --fullscreen --auto-zoom rtsp://127.0.0.1:8554/cam
+fi'
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=graphical.target
+EOF
+
+echo "Creating HTTP control service..."
+
+sudo tee /usr/local/bin/pi-zero-cam-http.py > /dev/null <<'EOF'
+#!/usr/bin/env python3
+from flask import Flask, request
+import subprocess
+
+app = Flask(__name__)
+
+VARS_FILE = "/usr/local/bin/pi-zero-cam-vars.sh"
+
+def update_profile(profile):
+    subprocess.run(
+        ["sed", "-i", f"s/^PROFILE=.*/PROFILE=\"{profile}\"/", VARS_FILE],
+        check=True
+    )
+    subprocess.run(["systemctl", "restart", "pi-zero-cam-stream"], check=True)
+
+@app.route("/")
+def control():
+    profile = request.args.get("profile")
+    if profile:
+        update_profile(profile)
+        return f"Profile switched to {profile}\n"
+
+    return "Camera running\n"
+
+app.run(host="0.0.0.0", port=80)
+EOF
+
+sudo chmod +x /usr/local/bin/pi-zero-cam-http.py
+
+sudo tee /etc/systemd/system/pi-zero-cam-http.service > /dev/null <<EOF
+[Unit]
+Description=Pi Zero Camera HTTP Control
+After=network.target
+
+[Service]
+ExecStart=/usr/bin/python3 /usr/local/bin/pi-zero-cam-http.py
+Restart=always
+RestartSec=2
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+sudo cp pi-zero-cam-vars.sh /usr/local/bin/
+sudo chmod +x /usr/local/bin/pi-zero-cam-vars.sh
+
 sudo systemctl daemon-reload
 
-echo "=== Service files created ==="
+echo "Configuration complete."
