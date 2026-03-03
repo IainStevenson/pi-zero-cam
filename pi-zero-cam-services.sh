@@ -1,14 +1,10 @@
 #!/bin/bash
 set -e
 
-sudo systemctl enable mediamtx
-sudo systemctl enable pi-zero-cam-stream
-sudo systemctl enable pi-zero-cam-http
-sudo systemctl enable pi-zero-cam-display
+# Enable and start user-level systemd service
+systemctl --user daemon-reload
+systemctl --user enable pi-zero-camera.service
+systemctl --user start pi-zero-camera.service
 
-sudo systemctl restart mediamtx
-sudo systemctl restart pi-zero-cam-stream
-sudo systemctl restart pi-zero-cam-http
-sudo systemctl restart pi-zero-cam-display
-
-echo "All services started."
+echo "Pi Zero Camera service started. Check with:"
+echo "  systemctl --user status pi-zero-camera.service"
