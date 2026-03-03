@@ -17,15 +17,17 @@ mkdir -p "$(dirname "$SERVICE_FILE")"
 
 cat > "$SERVICE_FILE" <<EOF
 [Unit]
-Description=Pi Zero Camera MJPEG Server
-After=network.target
+Description=Pi Zero Camera Auto
+After=graphical.target network.target
 
 [Service]
 Type=simple
-ExecStart=$HOME/scripts/pi-zero-cam.py
+ExecStartPre=/bin/sleep 5
+ExecStart=/usr/bin/python3 $HOME/scripts/pi-zero-cam.py
 Restart=always
 StandardOutput=journal
 StandardError=journal
+User=pi
 
 [Install]
 WantedBy=default.target
