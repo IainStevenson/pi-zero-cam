@@ -27,14 +27,14 @@ ssh "$PI_USER@$PI_HOST" "mkdir -p $REMOTE_DIR"
 # COPY ALL FILES IN PAYLOAD_DIR
 # -------------------------------
 echo "Copying payload files to $PI_USER@$PI_HOST:$REMOTE_DIR ..."
-scp "$PAYLOAD_DIR"/* "$PI_USER@$PI_HOST:$REMOTE_DIR/"
+#scp "$PAYLOAD_DIR"/* "$PI_USER@$PI_HOST:$REMOTE_DIR/"
 
-scp pi-zero-cam.py pi_zero_cam_vars.py pi-zero-cam-setup.sh pi-zero-cam-config.sh pi-zero-cam-services.sh  $DEST_USER@$DEST_HOST:~/$DEST_DIR/
+scp *.py *.sh  $PI_USER@$PI_HOST:$REMOTE_DIR/
 
 # -------------------------------
 # SET EXECUTABLE PERMISSIONS ON .sh FILES
 # -------------------------------
-echo "Setting executable permissions for .sh files..."
-ssh "$PI_USER@$PI_HOST" "chmod +x $REMOTE_DIR/*.sh"
+echo "Setting executable permissions for the files and executing setup..."
+ssh "$PI_USER@$PI_HOST" "chmod +x $REMOTE_DIR/*.sh && chmod +x $REMOTE_DIR/*.py && cd $REMOTE_DIR && ./device-setup.sh"
 
 echo "Deploy complete!"

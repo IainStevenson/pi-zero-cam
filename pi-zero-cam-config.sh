@@ -1,34 +1,28 @@
 #!/bin/bash
 set -e
 
-# Update apt and install dependencies
-sudo apt update
-sudo apt install -y python3 python3-pip libcamera-apps gstreamer1.0-tools gstreamer1.0-plugins-base gstreamer1.0-plugins-good
+echo "Creating systemd service for camera server"
 
-# Create scripts folder if not exists
-mkdir -p "$HOME/scripts"
+SERVICE_FILE="/etc/systemd/system/pi-zero-cam.service"
 
-# Make camera server executable
-chmod +x "$HOME/scripts/pi-zero-cam.py"
-
-# Create systemd service
-SERVICE_FILE="$HOME/.config/systemd/user/pi-zero-camera.service"
-mkdir -p "$(dirname "$SERVICE_FILE")"
-
-cat > "$SERVICE_FILE" <<EOF
+sudo tee $SERVICE_FILE > /dev/null <<'EOF'
 [Unit]
-Description=Pi Zero Camera Auto
-After=graphical.target network.target
+Description=Pi Zero MJPEG Camera Server
+After=network.target
 
 [Service]
 Type=simple
-ExecStartPre=/bin/sleep 5
-ExecStart=/usr/bin/python3 $HOME/scripts/pi-zero-cam.py
-Restart=always
-StandardOutput=journal
-StandardError=journal
 User=pi
+WorkingDirectory=/home/pi/pi-zero-cam
+ExecStart=/usr/bin/python3 /home/pi/pi-zero-cam/pi_zero_cam.py
+Restart=always
+RestartSec=3
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target
 EOF
+
+# Set correct permissions
+sudo chmod 644 $SERVICE_FILE
+
+echo "Service file created at $SERVICE_FILE"
