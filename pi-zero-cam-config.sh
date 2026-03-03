@@ -1,11 +1,11 @@
 #!/bin/bash
 set -e
 
-echo "Creating systemd service for camera server"
+echo "Creating systemd service for camera server..."
 
 SERVICE_FILE="/etc/systemd/system/pi-zero-cam.service"
 
-sudo tee $SERVICE_FILE > /dev/null <<'EOF'
+sudo tee "$SERVICE_FILE" > /dev/null <<'EOF'
 [Unit]
 Description=Pi Zero MJPEG Camera Server
 After=network.target
@@ -22,7 +22,6 @@ RestartSec=3
 WantedBy=multi-user.target
 EOF
 
-# Set correct permissions
-sudo chmod 644 $SERVICE_FILE
+sudo chmod 644 "$SERVICE_FILE"
 
 echo "Service file created at $SERVICE_FILE"

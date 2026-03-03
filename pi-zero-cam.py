@@ -20,7 +20,7 @@ if fb_exists:
     # Only run fullscreen preview if screen attached
     print("Framebuffer detected. Launching local fullscreen preview.")
     env = os.environ.copy()
-    env["DISPLAY"] = ":0"  # Optional, if using X11; safe for raw framebuffer too
+    env["DISPLAY"] = ":0"
     subprocess.Popen([
         "rpicam-vid",
         "--width", str(CAM_WIDTH),

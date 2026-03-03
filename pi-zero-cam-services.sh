@@ -1,13 +1,19 @@
 #!/bin/bash
 set -e
-echo "Enabling and Starting systemd services ..."
 
-# Enable and start user-level systemd service
+echo "Enabling and starting systemd service..."
+
+# Reload systemd to recognize new service
 sudo systemctl daemon-reload
-sudo systemctl enable pi-zero-camera.service
-sudo systemctl start pi-zero-camera.service
+
+# Enable service at boot
+sudo systemctl enable pi-zero-cam.service
+
+# Start service immediately
+sudo systemctl start pi-zero-cam.service
 
 echo "Pi Zero Camera service started. Check with:"
-echo "  systemctl status pi-zero-camera.service"
-# Watch logs
+echo "  systemctl status pi-zero-cam.service"
+
+# Optional: follow logs
 sudo journalctl -u pi-zero-cam.service -f
