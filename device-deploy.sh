@@ -35,6 +35,6 @@ scp *.py *.sh "$PI_USER@$PI_HOST:$REMOTE_DIR/"
 # SET EXECUTABLE PERMISSIONS AND RUN SETUP
 # -------------------------------
 echo "Setting executable permissions and invoking device-setup.sh..."
-ssh "$PI_USER@$PI_HOST" "chmod +x $REMOTE_DIR/*.sh $REMOTE_DIR/*.py && cd $REMOTE_DIR && ./device-setup.sh"
+ssh "$PI_USER@$PI_HOST" "chmod +x $REMOTE_DIR/*.sh $REMOTE_DIR/*.py" # && cd $REMOTE_DIR && ./device-setup.sh"
 
 echo "Deploy complete!"

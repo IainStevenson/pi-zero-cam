@@ -13,8 +13,8 @@ After=network.target
 [Service]
 Type=simple
 User=pi
-WorkingDirectory=/home/pi/pi-zero-cam
-ExecStart=/usr/bin/python3 /home/pi/pi-zero-cam/pi_zero_cam.py
+WorkingDirectory=/home/pi/scripts
+ExecStart=/usr/bin/python3 /home/pi/scripts/pi-zero-cam.py
 Restart=always
 RestartSec=3
 
@@ -23,5 +23,6 @@ WantedBy=multi-user.target
 EOF
 
 sudo chmod 644 "$SERVICE_FILE"
-
+# After creating the service file
+sudo systemctl daemon-reload
 echo "Service file created at $SERVICE_FILE"
