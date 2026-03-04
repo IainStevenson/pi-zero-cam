@@ -6,6 +6,11 @@ If a display screen is attached via teh HDMI on boot, it will disply only on the
 
 Then reboot without the HDMI attached screen to setup the web served video.
 
+This is workable code, and does not fulfill the ideal of the requiremetns in teh docs folder. Much was learned about waht is possible, with this tiny device, and what is not.
+
+Practical limitations with it seem to be the device WIFI range. Testing is ongoing in that respect.
+
+This prototype of ours is service as a lamb cam to see if we need to get up just yet, or not.
 
 ## Hardware recipe
 
