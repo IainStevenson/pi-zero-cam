@@ -23,9 +23,9 @@ if fb_exists:
     env["DISPLAY"] = ":0"
     subprocess.Popen([
         "rpicam-vid",
-        "--width", str(CAM_WIDTH),
-        "--height", str(CAM_HEIGHT),
-        "--framerate", str(CAM_FRAMERATE),
+#        "--width", str(CAM_WIDTH),
+#        "--height", str(CAM_HEIGHT),
+#        "--framerate", str(CAM_FRAMERATE),
         "-t", "0",
         "--fullscreen"
     ], env=env)
