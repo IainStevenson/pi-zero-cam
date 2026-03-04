@@ -31,6 +31,22 @@ Run from your cloned repo.
 Enter your device IP address.
 Enter your password used for the pi SSD OS card. It will ask a few times.
 
+Once completed you should SSH onot the device as the 'pi' user
+
+```
+ssh pi@address
+```
+Enter your password and then cd into the scripts folder.
+
+Execute the devbice setup script.
+
+```
+./device-setup.sh
+```
+
+This will setup a system level systemd process that starts on boot , detects if a screen is attached and displays the camera feed on it.
+If the display is missing it sets up to sesrve https clients on port at at a reduced frame rate.
+
 Once completed the process will be running and depedning on an attached display, either show the camera view on teh display, or via 
 
 http://pi-address>:8080
