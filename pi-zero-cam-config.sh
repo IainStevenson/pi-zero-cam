@@ -12,7 +12,7 @@ After=network.target
 
 [Service]
 Type=simple
-User=pi
+User=zero
 WorkingDirectory=/home/zero/scripts
 ExecStart=/usr/bin/python3 /home/zero/scripts/pi-zero-cam.py
 Restart=always
