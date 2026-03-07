@@ -7,7 +7,7 @@ echo "Obtain its operational IP address"
 # -------------------------------
 # CONFIGURATION - edit as needed
 # -------------------------------
-PI_USER="pi"             # Raspberry Pi username
+PI_USER="zero"           # Raspberry Pi username
 PI_HOST=""               # Prompted below if empty
 REMOTE_DIR="~/scripts"   # Remote folder to copy payload
 PAYLOAD_DIR="."          # Local folder with scripts
