@@ -9,7 +9,7 @@ import time
 # -----------------------------
 # Import camera variables
 # -----------------------------
-from pi_zero_cam_vars import CAM_WIDTH, CAM_HEIGHT, CAM_FRAMERATE, CAM_PORT, CAM_EXPOSURE
+from pi_zero_cam_vars import CAM_WIDTH, CAM_HEIGHT, CAM_FRAMERATE, CAM_PORT, CAM_AWB
 
 # -----------------------------
 # Detect local display (framebuffer)

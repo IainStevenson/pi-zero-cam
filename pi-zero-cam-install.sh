@@ -3,6 +3,7 @@ set -e
 
 echo "Updating system apt packages..."
 sudo apt update
+# disabling full upgrade on a slow link
 #sudo apt full-upgrade -y
 
 echo "Installing required packages..."
