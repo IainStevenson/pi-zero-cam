@@ -12,6 +12,10 @@ paths:
     # Encoder settings
     rpiCameraBitrate: 2000000  # 2 Mbps; adjust up to 2.5 Mbps for maximum clarity
     rpiCameraIDRPeriod: 25     # keyframe every second (matches FPS)
+    
+    rpiCameraBrightness: 0.25
+    rpiCameraExposure: long
+    rpiCameraAWB: indoor
 
     # Flip options if needed
     rpiCameraHFlip: false
