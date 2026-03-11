@@ -1,19 +1,9 @@
 # PI Zero Cam
 
-This code will setup a PI cam service on tcp/h264://<pi-address?:8554 to view the camera  video feed via aps like VLC
+This code will setup a PI cam service on http://<pi-address?:8889/cam 
 
-NOTE: IoS version wont work.
+to view the camera  video feed via http
 
-
-This is workable code but a work in progress towards something more functional. 
-
-It does not fulfill the ideal of the requirements in the docs folder. Much was learned about what is possible, with this tiny device, and what is not.
-
-Practical limitations with it seem to be the device WIFI range. Testing is ongoing in that respect.
-
-Note: WIFI Access Point performance is a black are at times.
-
-This prototype of ours is service as a 'lamb cam' to see if we need to get up just yet, or not.
 
 ## Hardware recipe
 
@@ -21,7 +11,7 @@ PI Zero 2 W (with or without headers)
 NOIR or other PI Zero compatible camera
 IR floodlight
 
-Assemble
+Assemble to suit.
 
 ## Software recipe
 
@@ -31,10 +21,15 @@ Setup with a user of zero (or change the code) password and SSH as a mimimum.
 
 Load the finished SSD.
 
+ssh onto the pi when its avaialble on the network
+adjust netowkr addressing type as needed dynamic/infrastructure
+
+setup ssh keys to automate ssh
+
 Run from your cloned repo.
 
 ```
-./device-deploy.sh
+./deploy.sh [pi-user pi-address ]
 ```
 
 Enter your device IP address. (adjust the deploy script as necessary)

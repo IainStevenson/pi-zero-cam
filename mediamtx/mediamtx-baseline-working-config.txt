@@ -1,0 +1,8 @@
+paths:
+  cam:
+    source: rpiCamera
+
+    rpiCameraWidth: 960
+    rpiCameraHeight: 540
+    rpiCameraFPS: 15
+    rpiCameraBitrate: 700000
