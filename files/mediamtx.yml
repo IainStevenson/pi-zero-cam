@@ -10,7 +10,7 @@ paths:
     rpiCameraFPS: 25        # smoother motion, good compromise for Pi Zero 2 W
 
     # Encoder settings
-    rpiCameraBitrate: 5000000  # 5 Mbps; adjust up to >=2.5 Mbps for maximum clarity
+    rpiCameraBitrate: 15000000  # 1.5 Mbps; seems to be the max sustainable on our WIFI, more thatn 2.5Mbps may be wasteful.
     rpiCameraIDRPeriod: 25     # keyframe every second (matches FPS)
 
 

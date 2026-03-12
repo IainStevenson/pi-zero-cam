@@ -1,55 +1,77 @@
 # PI Zero Cam
 
-This code will setup a PI cam service on http://<pi-address?:8889/cam 
-
-to view the camera  video feed via http
+This code will setup a PI cam service using `mediamtx` on `http://<pi-address>:8889/cam` 
 
 
 ## Hardware recipe
 
 PI Zero 2 W (with or without headers)
-NOIR or other PI Zero compatible camera
-IR floodlight
+attach a NOIR or other PI Zero compatible camera
+IR floodlight if a NOIR camera is attached and night viewing desired.
+A case of some sort
+Power adapters for all.
+SSD card
 
 Assemble to suit.
 
 ## Software recipe
 
-Burn an SSD using the RPI imaged Raspberry OS 64 Bit.
+Use the latest RPI Imager to flash the SSD using the Raspberry OS 64 Bit.
 
-Setup with a user of zero (or change the code) password and SSH as a mimimum.
+Setup with your WIFI SSID and password, a user of 'zero' (or change the code to your specification) user password and enable SSH as a mimimum. The default PI imaged username is `pi`
 
-Load the finished SSD.
+Load the finished SSD onto the PI.
 
-ssh onto the pi when its avaialble on the network
-adjust netowkr addressing type as needed dynamic/infrastructure
+Boot
 
-setup ssh keys to automate ssh
+ssh onto the pi when its available on the network
 
-Run from your cloned repo.
+I recommend setting up an SSH key and copying that to the pi first off.
+
+
+adjust network addressing type as needed, leave as DHCP dynamic or opt for infrastructure with a fixed IP
+
+
+
+Change the `inventory.ini` as needed. Replace `zero-cam` with your devices IP address or DNS name if you have one, and the `ansible_user` value with your chosen username when you flashed the image.
+
+Run the playbook via;
 
 ```
-./deploy.sh [pi-user pi-address ]
+./run
 ```
 
-Enter your device IP address. (adjust the deploy script as necessary)
-Enter your password used for the pi SSD OS card. It will ask a few times.
-
-Once completed you should SSH onto the device as the 'pi' user
+Once completed you should SSH onto the device as the 'pi' device user, e.g.
 
 ```
 ssh zero@address
 ```
 Enter your password and then cd into the scripts folder.
 
-Execute the device setup script.
+You can monitor the camera service via either
 
 ```
-./device-setup.sh
+sudo systemctl status  pi-zero-cam-streaming.service
 ```
 
-This will setup a system level systemd process that starts on boot.
+or
 
-The display rate is set to  1280*720@30 fps and capped at 1.5Mbps bandwidth usage. 
+```
+sudo journalctl -u pi-zero-cam-streaming.service -f
+```
 
 
+
+
+TO DO
+
+sudo nano /etc/NetworkManager/conf.d/wifi-powersave.conf
+
+```                                                        
+[connection]
+wifi.powersave = 2
+```
+
+
+
+zero@zero-cam:~ $ sudo iw dev wlan0 set power_save off

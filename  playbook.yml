@@ -22,6 +22,16 @@
   - name: Run nala fetch
     command: nala fetch --auto -y
 
+  - name: Set WIFI Power save config
+    template:
+      src: templates/wifi-powersave.conf
+      dest: /etc/NetworkManager/conf.d/wifi-powersave.conf
+      mode: '0644'
+
+  - name: Set running WIFI Power save 
+    command:
+      cmd: iw dev wlan0 set power_save off
+
   - name: Update system packages
     command: nala update
 
@@ -55,8 +65,8 @@
         file:
           path: "{{ install_dir }}"
           state: directory
-          owner: zero
-          group: zero
+          owner: {{ansible_user}}
+          group: {{ansible_user}}
 
       - name: Download mediamtx tarball
         get_url:
@@ -84,8 +94,8 @@
     copy:
       src: files/mediamtx.yml
       dest: /home/zero/mediamtx.yml
-      owner: zero
-      group: zero
+      owner: {{ansible_user}}
+      group: {{ansible_user}}
       mode: '0644'
 
 
