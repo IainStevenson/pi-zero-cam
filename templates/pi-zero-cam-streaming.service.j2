@@ -1,0 +1,20 @@
+[Unit]
+Description=Pi Zero Camera Streaming Server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+User=zero
+Group=video
+WorkingDirectory=/home/zero
+
+ExecStartPre=/bin/sleep 8
+ExecStart=/usr/local/bin/mediamtx /home/zero/mediamtx.yml
+
+Restart=always
+RestartSec=5
+
+CPUQuota=90%
+
+[Install]
+WantedBy=multi-user.target
