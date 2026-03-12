@@ -2,6 +2,11 @@
 - name: Configure Pi Zero camera server
   hosts: pi_cameras
   gather_facts: no
+  become: true
+
+  vars:
+    mediamtx_version: v1.16.3
+    install_dir: /home/zero/mediamtx-install
 
   tasks:
 
@@ -28,30 +33,52 @@
   - name: Enable camera interface
     command: raspi-config nonint do_camera 0
 
-  - name: Create install directory
-    file:
-      path: /home/zero/mediamtx-install
-      state: directory
-      owner: zero
-      group: zero
 
-  - name: Download MediaMTX
-    get_url:
-      url: https://github.com/bluenviron/mediamtx/releases/download/v1.16.3/mediamtx_v1.16.3_linux_arm64.tar.gz
-      dest: /home/zero/mediamtx-install/mediamtx.tar.gz
+  # -----------------------------
+  # Check if mediamtx exists
+  # -----------------------------
 
-  - name: Extract MediaMTX
-    unarchive:
-      src: /home/zero/mediamtx-install/mediamtx.tar.gz
-      dest: /home/zero/mediamtx-install/
-      remote_src: yes
+  - name: Check if mediamtx binary exists
+    stat:
+      path: /usr/local/bin/mediamtx
+    register: mediamtx_binary
 
-  - name: Install mediamtx binary
-    copy:
-      src: /home/zero/mediamtx-install/mediamtx
-      dest: /usr/local/bin/mediamtx
-      mode: '0755'
-      remote_src: yes
+
+  # -----------------------------
+  # Install mediamtx if missing
+  # -----------------------------
+
+  - name: Install mediamtx
+    block:
+
+      - name: Create install directory
+        file:
+          path: "{{ install_dir }}"
+          state: directory
+          owner: zero
+          group: zero
+
+      - name: Download mediamtx tarball
+        get_url:
+          url: "https://github.com/bluenviron/mediamtx/releases/download/{{ mediamtx_version }}/mediamtx_{{ mediamtx_version }}_linux_arm64.tar.gz"
+          dest: "{{ install_dir }}/mediamtx.tar.gz"
+
+      - name: Extract mediamtx
+        command:
+          cmd: tar -xvf mediamtx.tar.gz
+          chdir: "{{ install_dir }}"
+
+      - name: Move mediamtx binary to system path
+        command:
+          cmd: mv mediamtx /usr/local/bin/
+          chdir: "{{ install_dir }}"
+
+    when: not mediamtx_binary.stat.exists
+
+
+  # -----------------------------
+  # Deploy configuration
+  # -----------------------------
 
   - name: Copy MediaMTX config
     copy:
@@ -61,15 +88,22 @@
       group: zero
       mode: '0644'
 
+
+  # -----------------------------
+  # Install systemd service
+  # -----------------------------
+
   - name: Install systemd service
     template:
       src: templates/pi-zero-cam-streaming.service.j2
       dest: /etc/systemd/system/pi-zero-cam-streaming.service
       mode: '0644'
 
+
   - name: Reload systemd
     systemd:
       daemon_reload: yes
+
 
   - name: Enable and start streaming service
     systemd:

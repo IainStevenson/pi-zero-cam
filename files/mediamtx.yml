@@ -10,12 +10,13 @@ paths:
     rpiCameraFPS: 25        # smoother motion, good compromise for Pi Zero 2 W
 
     # Encoder settings
-    rpiCameraBitrate: 2000000  # 2 Mbps; adjust up to 2.5 Mbps for maximum clarity
+    rpiCameraBitrate: 5000000  # 5 Mbps; adjust up to >=2.5 Mbps for maximum clarity
     rpiCameraIDRPeriod: 25     # keyframe every second (matches FPS)
-    
-    rpiCameraBrightness: 0.25
+
+
+    rpiCameraBrightness: 0.195
     rpiCameraExposure: long
-    rpiCameraAWB: indoor
+    rpiCameraAWB: cloudy
 
     # Flip options if needed
     rpiCameraHFlip: false
