@@ -1,0 +1,27 @@
+paths:
+  cam:
+    source: rpiCamera
+
+    sourceOnDemand: yes   # camera only runs when a client connects
+    
+
+    # Resolution and frame rate
+    rpiCameraWidth: 1280    # 720p gives better clarity than 960x540
+    rpiCameraHeight: 720
+    rpiCameraFPS: 15        # smoother motion, good compromise for Pi Zero 2 W
+
+    # Encoder settings
+    rpiCameraBitrate: 600000  # set bandwidth limit in bits/second
+    rpiCameraIDRPeriod: 60     # keyframe every second (matches FPS)
+  
+    rpiCameraContrast: 1.0
+
+    rpiCameraBrightness: 0.2
+    rpiCameraExposure: long
+    rpiCameraAWB: indoor
+
+    # Flip options if needed
+    rpiCameraHFlip: false
+    rpiCameraVFlip: false
+
+

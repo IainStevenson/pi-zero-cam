@@ -43,6 +43,23 @@
   - name: Enable camera interface
     command: raspi-config nonint do_camera 0
 
+  - name: Install iperf3
+    apt:
+      name: iperf3
+      state: present
+
+  - name: Install iftop
+    apt:
+      name: iftop
+      state: present
+
+  - name: Install nload
+    apt:
+      name: nload
+      state: present
+
+
+
 
   # -----------------------------
   # Check if mediamtx exists
@@ -65,8 +82,8 @@
         file:
           path: "{{ install_dir }}"
           state: directory
-          owner: {{ansible_user}}
-          group: {{ansible_user}}
+          owner: "{{ansible_user}}"
+          group: "{{ansible_user}}"
 
       - name: Download mediamtx tarball
         get_url:
@@ -94,8 +111,8 @@
     copy:
       src: files/mediamtx.yml
       dest: /home/zero/mediamtx.yml
-      owner: {{ansible_user}}
-      group: {{ansible_user}}
+      owner: "{{ansible_user}}"
+      group: "{{ansible_user}}"
       mode: '0644'
 
 
