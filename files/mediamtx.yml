@@ -6,19 +6,19 @@ paths:
     
 
     # Resolution and frame rate
-    rpiCameraWidth: 1280    # 720p gives better clarity than 960x540
-    rpiCameraHeight: 720
-    rpiCameraFPS: 15        # smoother motion, good compromise for Pi Zero 2 W
+    rpiCameraWidth: 1280
+    rpiCameraHeight: 720        # 720p gives better clarity than 960x540
+    rpiCameraFPS: 15            # smoother motion, good compromise for Pi Zero 2 W
 
     # Encoder settings
-    rpiCameraBitrate: 700000  # set bandwidth limit in bits/second
-    rpiCameraIDRPeriod: 60     # keyframe every second (matches FPS)
+    rpiCameraBitrate: 700000    # set bandwidth limit in bits/second
+    rpiCameraIDRPeriod: 60      # keyframe every 4 seconds 
   
-    rpiCameraContrast: 1.1
+    rpiCameraContrast: 1        # 1 day, 1.25 night
+    rpiCameraBrightness: 0.2    # 0 day, 0.25 night
+    rpiCameraExposure: long     # normal day, long night
 
-    rpiCameraBrightness: 0.22
-    rpiCameraExposure: long
-    rpiCameraAWB: cloudy
+    rpiCameraAWB: cloudy        # or indoor
 
     # Flip options if needed
     rpiCameraHFlip: false

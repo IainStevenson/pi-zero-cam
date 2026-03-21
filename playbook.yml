@@ -22,6 +22,13 @@
   - name: Run nala fetch
     command: nala fetch --auto -y
 
+
+  - name: Reset nala (just in case)
+    command: nala clean
+
+  - name: Update system packages
+    command: nala update
+
   - name: Set WIFI Power save config
     template:
       src: templates/wifi-powersave.conf
@@ -31,9 +38,6 @@
   - name: Set running WIFI Power save 
     command:
       cmd: iw dev wlan0 set power_save off
-
-  - name: Update system packages
-    command: nala update
 
   - name: Install camera packages
     apt:
@@ -57,9 +61,6 @@
     apt:
       name: nload
       state: present
-
-
-
 
   # -----------------------------
   # Check if mediamtx exists
