@@ -93,7 +93,7 @@
     ansible.builtin.cron:
       name: "Night profile"
       minute: "00"
-      hour: "20"
+      hour: "19"
       user: "{{ansible_user}}"
       job: "cp -f ~/mediamtx_night.yml ~/mediamtx.yml"
 
