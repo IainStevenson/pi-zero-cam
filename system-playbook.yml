@@ -1,0 +1,60 @@
+---
+- name: Configure Pi Zero camera server
+  hosts: pi_cameras
+  gather_facts: no
+  become: true
+
+  tasks:
+
+  - name: Update apt cache
+    apt:
+      update_cache: yes
+
+  - name: Install nala
+    apt:
+      name: nala
+      state: present
+
+  - name: Run nala fetch
+    command: nala fetch --auto -y
+
+
+  - name: Reset nala (just in case)
+    command: nala clean
+
+  - name: Update system packages
+    command: nala update
+
+  - name: Set WIFI Power save config
+    template:
+      src: templates/wifi-powersave.conf
+      dest: /etc/NetworkManager/conf.d/wifi-powersave.conf
+      mode: '0644'
+
+  - name: Set running WIFI Power save 
+    command:
+      cmd: iw dev wlan0 set power_save off
+
+  - name: Install camera packages
+    apt:
+      name: rpicam-apps
+      state: present
+
+  - name: Enable camera interface
+    command: raspi-config nonint do_camera 0
+
+  - name: Install iperf3
+    apt:
+      name: iperf3
+      state: present
+
+  - name: Install iftop
+    apt:
+      name: iftop
+      state: present
+
+  - name: Install nload
+    apt:
+      name: nload
+      state: present
+

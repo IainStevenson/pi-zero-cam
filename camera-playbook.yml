@@ -10,57 +10,6 @@
 
   tasks:
 
-  - name: Update apt cache
-    apt:
-      update_cache: yes
-
-  - name: Install nala
-    apt:
-      name: nala
-      state: present
-
-  - name: Run nala fetch
-    command: nala fetch --auto -y
-
-
-  - name: Reset nala (just in case)
-    command: nala clean
-
-  - name: Update system packages
-    command: nala update
-
-  - name: Set WIFI Power save config
-    template:
-      src: templates/wifi-powersave.conf
-      dest: /etc/NetworkManager/conf.d/wifi-powersave.conf
-      mode: '0644'
-
-  - name: Set running WIFI Power save 
-    command:
-      cmd: iw dev wlan0 set power_save off
-
-  - name: Install camera packages
-    apt:
-      name: rpicam-apps
-      state: present
-
-  - name: Enable camera interface
-    command: raspi-config nonint do_camera 0
-
-  - name: Install iperf3
-    apt:
-      name: iperf3
-      state: present
-
-  - name: Install iftop
-    apt:
-      name: iftop
-      state: present
-
-  - name: Install nload
-    apt:
-      name: nload
-      state: present
 
   # -----------------------------
   # Check if mediamtx exists
@@ -115,6 +64,38 @@
       owner: "{{ansible_user}}"
       group: "{{ansible_user}}"
       mode: '0644'
+
+  - name: Copy MediaMTX day config
+    copy:
+      src: files/mediamtx_day.yml
+      dest: /home/zero/mediamtx_day.yml
+      owner: "{{ansible_user}}"
+      group: "{{ansible_user}}"
+      mode: '0644'
+
+  - name: Copy MediaMTX night config
+    copy:
+      src: files/mediamtx_night.yml
+      dest: /home/zero/mediamtx_night.yml
+      owner: "{{ansible_user}}"
+      group: "{{ansible_user}}"
+      mode: '0644'
+
+  - name: Schedule day camera profile
+    ansible.builtin.cron:
+      name: "Day profile"
+      minute: "00"
+      hour: "5"
+      user: "{{ansible_user}}"
+      job: "cp -f ~/mediamtx_day.yml ~/mediamtx.yml"
+
+  - name: Schedule night camera profile
+    ansible.builtin.cron:
+      name: "Night profile"
+      minute: "00"
+      hour: "20"
+      user: "{{ansible_user}}"
+      job: "cp -f ~/mediamtx_night.yml ~/mediamtx.yml"
 
 
   # -----------------------------

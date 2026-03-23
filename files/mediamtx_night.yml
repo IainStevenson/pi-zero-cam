@@ -14,8 +14,8 @@ paths:
     rpiCameraBitrate: 700000    # set bandwidth limit in bits/second
     rpiCameraIDRPeriod: 60      # keyframe every 4 seconds 
   
-    rpiCameraContrast: 1        # 1 day, 1.25 night
-    rpiCameraBrightness: 0      # 0 day, 0.25 night
+    rpiCameraContrast: 1.25        # 1 day, 1.25 night
+    rpiCameraBrightness: 0.25    # 0 day, 0.25 night
     rpiCameraExposure: long     # normal day, long night
 
     rpiCameraAWB: cloudy        # or indoor
