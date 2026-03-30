@@ -23,3 +23,5 @@ paths:
     # Flip options if needed
     rpiCameraHFlip: false
     rpiCameraVFlip: false
+
+    rpiCameraAfMode: manual     # prevents AF wobble when multiple targets are in view
